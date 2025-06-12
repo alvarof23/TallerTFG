@@ -1,0 +1,36 @@
+RewriteEngine On
+RewriteCond %{HTTP:X-Forwarded-Proto} http$
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+<IfModule mod_security2.c>
+   SecRuleRemoveById 210 208 210240 210230
+</IfModule>
+
+
+
+
+
+<FilesMatch "\.(html|css|js|gif|jpg|jpeg|png|ico|swf|eot|otf|svg|ttf|woff|woff2)$">
+    Header set Cache-Control "max-age=2628000, public"
+    Header set Access-Control-Allow-Origin "*"
+</FilesMatch> 
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /cms-web-projects-alvaro/cms/source/
+	
+  RewriteCond %{HTTP_HOST} ^www.demo2.sascomweb.es [NC]
+    RewriteRule (.*) https://demo2.sascomweb.es/$1 [L,R=301]  
+
+    RewriteCond %{REQUEST_URI} ^system.*
+    RewriteRule ^(.*)$ /index.php?/$1 [L]
+
+    RewriteCond %{REQUEST_URI} ^application.*
+    RewriteRule ^(.*)$ /index.php?/$1 [L]
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php?/$1 [L]
+
+      RewriteRule ^xml/ - [F,L]
+    RewriteRule ^xml/[^/]+\.xml$ - [F,L]
+</IfModule>
