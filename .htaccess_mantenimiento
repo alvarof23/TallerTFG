@@ -1,0 +1,32 @@
+RewriteEngine On
+
+# Redirección HTTP a HTTPS si aplica (puedes quitar si no usas HTTPS)
+RewriteCond %{HTTP:X-Forwarded-Proto} http$
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Seguridad: desactivar reglas de mod_security si están causando conflictos
+<IfModule mod_security2.c>
+   SecRuleRemoveById 210 208 210240 210230
+</IfModule>
+
+# Cache y CORS para archivos estáticos
+<FilesMatch "\.(html|css|js|gif|jpg|jpeg|png|ico|swf|eot|otf|svg|ttf|woff|woff2)$">
+    Header set Cache-Control "max-age=2628000, public"
+    Header set Access-Control-Allow-Origin "*"
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /Taller/
+
+    # Permitir acceso a recursos estáticos (imagenes, CSS, JS, etc.)
+    RewriteCond %{REQUEST_URI} \.(jpe?g?|png|gif|css|js|ico|woff2?|ttf|svg|eot)$ [NC]
+    RewriteRule ^ - [L]
+
+    # Permitir acceso al archivo de mantenimiento
+    RewriteCond %{REQUEST_URI} mantenimiento\.php$ [NC]
+    RewriteRule ^ - [L]
+
+    # Redirigir todas las demás solicitudes a mantenimiento
+    RewriteRule ^(.*)$ /Taller/mantenimiento.php [R=302,L]
+</IfModule>

@@ -1,0 +1,18 @@
+# RewriteEngine On
+# RewriteBase /Taller/
+
+# # Remover index.php de las URLs
+# RewriteCond %{REQUEST_URI} ^/Taller/(.*)$
+# RewriteRule ^(.*)$ /Taller/index.php/$1 [L]
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /Taller/
+
+    # Si el archivo o directorio existe, no hacer rewrite
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Redirigir todo a index.php
+    RewriteRule ^(.*)$ index.php/$1 [L]
+</IfModule>
