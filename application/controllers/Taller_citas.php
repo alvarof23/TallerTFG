@@ -833,6 +833,7 @@ class Taller_citas extends CI_Controller
 
 	public function imprimir_factura($cita_id)
 	{
+		
 		$this->output->enable_profiler(FALSE);
 		if (ob_get_length()) {
 			ob_end_clean();
@@ -922,10 +923,11 @@ class Taller_citas extends CI_Controller
 		}
 
 		// Cargar mPDF
-		require_once FCPATH . '/vendor/autoload.php';
+		// require_once FCPATH . '/vendor/autoload.php';
+		// $mpdf = new \mPDF();
 
-		// Usar la forma correcta para la versión 6.x de mPDF
-		$mpdf = new \mPDF();
+		require_once(APPPATH . 'libraries/mpdf/mpdf/mpdf.php');
+		$mpdf = new mPDF();
 
 		// Establecer los metadatos del documento PDF
 		$mpdf->SetCreator(PDF_CREATOR);
@@ -935,7 +937,8 @@ class Taller_citas extends CI_Controller
 		$mpdf->SetKeywords('Factura, Taller, Servicios');
 
 		// Cargar el archivo CSS si lo tienes
-		$css = file_get_contents(FCPATH . 'vendor/mpdf/mpdf/mpdf.css');
+		// $css = file_get_contents(FCPATH . 'vendor/mpdf/mpdf/mpdf.css');
+		$css = file_get_contents(FCPATH . 'application/libraries/mpdf/mpdf/mpdf.css');
 		$mpdf->WriteHTML($css, 1);
 
 		//$data['css'] = $this->load->view('taller_citas/css_module/css_module', '', TRUE);
